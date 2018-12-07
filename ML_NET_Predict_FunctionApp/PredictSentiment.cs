@@ -17,22 +17,22 @@ using ML_NET_Predict_FunctionApp.Model;
 namespace ML_NET_Predict_FunctionApp
 {
     public static class PredictSentiment
-    {
-        private static string ModelPath => "C:/Users/kapeltol/Source/Repos/NETMLAppTest/NETMLAppTest/Data/functionmodel.zip"; //Url to blob
+    {        
         [FunctionName("PredictSentiment")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            [Blob("models/test", FileAccess.Read, Connection = "AzureWebJobsStorage")] Stream serializedModel,
+            [HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = null)] HttpRequest req,
+            [Blob("models/demomodel", FileAccess.Read)] Stream serializedModel,
             Binder binder,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string text = req.Query["Text"];
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            text = text ?? data?.Text;
+            string text = data?.Text;
+
+            if (text == null)
+                return new BadRequestObjectResult("Please pass sentiment text [text] in the request body");
 
             //Create MLContext to be shared across the model creation workflow objects 
             //Set a random seed for repeatable/deterministic results across multiple trainings.
@@ -40,12 +40,7 @@ namespace ML_NET_Predict_FunctionApp
 
             SentimentIssue sampleStatement = new SentimentIssue { Text = text };
             
-            ITransformer trainedModel;
-            trainedModel = mlContext.Model.Load(serializedModel);
-            /*using (var stream = new FileStream(modelblob, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                trainedModel = mlContext.Model.Load(stream);
-            }*/
+            ITransformer trainedModel = mlContext.Model.Load(serializedModel);
 
             // Create prediction engine related to the loaded trained model
             var predFunction = trainedModel.MakePredictionFunction<SentimentIssue, SentimentPrediction>(mlContext);
