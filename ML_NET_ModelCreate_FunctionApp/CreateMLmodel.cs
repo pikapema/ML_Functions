@@ -41,7 +41,7 @@ namespace ML_NET_ModelCreate_FunctionApp
 
 
             //Load training data from url given in request
-            var trainingDataView = reader.Read("./Data/wikipedia-detox-250-line-data.tsv"); 
+            var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-data.tsv"); 
 
 
             // STEP 2: Common data process configuration with pipeline data transformations          
@@ -55,7 +55,7 @@ namespace ML_NET_ModelCreate_FunctionApp
             // STEP 4: Train the model fitting to the DataSet
             ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
 
-            IDataView testDataView = reader.Read("./Data/wikipedia-detox-250-line-test.tsv");
+            IDataView testDataView = reader.Read("D:/home/site/wwwroot/Data//Data/wikipedia-detox-250-line-test.tsv");
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score");
             log.LogInformation($"Model's Accuracy: {metrics.Accuracy:P2}");

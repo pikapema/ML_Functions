@@ -47,10 +47,10 @@ namespace ML_NET_Predict_FunctionApp
 
             //Score
             var resultprediction = predFunction.Predict(sampleStatement);
-            log.LogInformation($"Text: {sampleStatement.Text} | Prediction: {(Convert.ToBoolean(resultprediction.Prediction) ? "Toxic" : "Nice")} sentiment | Probability: {resultprediction.Probability} ");
+            log.LogInformation($"Text: {sampleStatement.Text} | Prediction: {resultprediction.Prediction} | Probability: {resultprediction.Probability} | Score: {resultprediction.Score}  ");
 
             return text != null
-                ? (ActionResult)new OkObjectResult($"{(Convert.ToBoolean(resultprediction.Prediction) ? "0" : "1")}")
+                ? (ActionResult)new OkObjectResult($"{resultprediction.Prediction}")
                 : new BadRequestObjectResult("Please pass a Text in the request body");
         }
     }
