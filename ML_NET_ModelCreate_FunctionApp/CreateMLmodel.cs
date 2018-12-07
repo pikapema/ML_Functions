@@ -40,7 +40,8 @@ namespace ML_NET_ModelCreate_FunctionApp
                             });
                         
             log.LogInformation("Reading training data...");
-            var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-data.tsv");
+            //var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-data.tsv");
+            var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-dataSentiment_tweets.tsv");
             log.LogInformation("Done loading training data.");
 
 
@@ -59,10 +60,10 @@ namespace ML_NET_ModelCreate_FunctionApp
             log.LogInformation("Done!");
 
             // STEP 5: Evaluate model with training set
-            IDataView testDataView = reader.Read("D:/home/site/wwwroot/Data//Data/wikipedia-detox-250-line-test.tsv");
+            /*IDataView testDataView = reader.Read("D:/home/site/wwwroot/Data//Data/wikipedia-detox-250-line-test.tsv");
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score");
-            log.LogInformation($"Model's Accuracy: {metrics.Accuracy:P2}");
+            log.LogInformation($"Model's Accuracy: {metrics.Accuracy:P2}");*/
 
             // STEP 6: Save/persist the trained model to blob
             mlContext.Model.Save(trainedModel, modelstream);
