@@ -21,7 +21,7 @@ namespace ML_NET_Predict_FunctionApp
         [FunctionName("PredictSentiment")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = null)] HttpRequest req,
-            [Blob("models/demomodel", FileAccess.Read)] Stream serializedModel,
+            [Blob("models/SentimentModel.zip", FileAccess.Read)] Stream serializedModel,
             Binder binder,
             ILogger log)
         {
@@ -32,7 +32,7 @@ namespace ML_NET_Predict_FunctionApp
             string text = data?.Text;
 
             if (text == null)
-                return new BadRequestObjectResult("Please pass sentiment text [text] in the request body");
+                return new BadRequestObjectResult("Please pass sentiment text [Text] in the request body");
 
             //Create MLContext to be shared across the model creation workflow objects 
             //Set a random seed for repeatable/deterministic results across multiple trainings.
