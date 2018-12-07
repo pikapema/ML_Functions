@@ -41,7 +41,7 @@ namespace ML_NET_ModelCreate_FunctionApp
                         
             log.LogInformation("Reading training data...");
             //var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-data.tsv");
-            var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-dataSentiment_tweets.tsv");
+            var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/Sentiment_tweets.tsv");
             log.LogInformation("Done loading training data.");
 
 
