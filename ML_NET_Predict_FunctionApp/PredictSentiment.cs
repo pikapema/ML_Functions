@@ -50,7 +50,7 @@ namespace ML_NET_Predict_FunctionApp
             log.LogInformation($"Text: {sampleStatement.Text} | Prediction: {resultprediction.Prediction} | Probability: {resultprediction.Probability} | Score: {resultprediction.Score}  ");
 
             return text != null
-                ? (ActionResult)new OkObjectResult($"{resultprediction.Prediction}")
+                ? (ActionResult)new OkObjectResult(resultprediction.Prediction)
                 : new BadRequestObjectResult("Please pass a Text in the request body");
         }
     }
