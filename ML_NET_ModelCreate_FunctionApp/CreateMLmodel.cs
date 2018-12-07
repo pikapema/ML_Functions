@@ -21,7 +21,7 @@ namespace ML_NET_ModelCreate_FunctionApp
             [Blob("models/demomodel", FileAccess.Write)] Stream modelstream,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("C# HTTP trigger function processesing a request.");
 
             //Create MLContext to be shared across the model creation workflow objects 
             //Set a random seed for repeatable/deterministic results across multiple trainings.
@@ -38,11 +38,10 @@ namespace ML_NET_ModelCreate_FunctionApp
                                     new TextLoader.Column("Text", DataKind.Text, 1)
                                 }
                             });
-
-
-            //Load training data from url given in request
-            //var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-data.tsv"); 
-            var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/Sentiment_tweets.tsv");
+                        
+            log.LogInformation("Reading training data...");
+            var trainingDataView = reader.Read("D:/home/site/wwwroot/Data/wikipedia-detox-250-line-data.tsv");
+            log.LogInformation("Done loading training data.");
 
 
             // STEP 2: Common data process configuration with pipeline data transformations          
@@ -53,20 +52,22 @@ namespace ML_NET_ModelCreate_FunctionApp
             var trainer = mlContext.BinaryClassification.Trainers.FastTree(label: "Label", features: "Features");
             var trainingPipeline = dataProcessPipeline.Append(trainer);
 
+            log.LogInformation("Starting training...");
+
             // STEP 4: Train the model fitting to the DataSet
             ITransformer trainedModel = trainingPipeline.Fit(trainingDataView);
+            log.LogInformation("Done!");
 
             // STEP 5: Evaluate model with training set
-            /*
             IDataView testDataView = reader.Read("D:/home/site/wwwroot/Data//Data/wikipedia-detox-250-line-test.tsv");
             var predictions = trainedModel.Transform(testDataView);
             var metrics = mlContext.BinaryClassification.Evaluate(predictions, "Label", "Score");
-            log.LogInformation($"Model's Accuracy: {metrics.Accuracy:P2}");*/
+            log.LogInformation($"Model's Accuracy: {metrics.Accuracy:P2}");
 
             // STEP 6: Save/persist the trained model to blob
             mlContext.Model.Save(trainedModel, modelstream);
+            log.LogInformation("Saved model to blob.");
 
-            
             return (ActionResult)new OkObjectResult($"Model trained sucessfully!");
         }
 
